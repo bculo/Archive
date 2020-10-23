@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ModelArchive.Persistence;
 
 namespace ModelArchive.WebApi
 {
@@ -25,6 +26,9 @@ namespace ModelArchive.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Install persistence
+            PersistenceInstallation.Install(services, Configuration);
+
             services.AddControllers();
         }
 

@@ -17,7 +17,7 @@ namespace ModelArchive.Persistence
     {
         private readonly IDateTime _time;
 
-        public ArchiveDbContext(DbContextOptions<ArchiveDbContext> options,
+        public ArchiveDbContext(DbContextOptions options,
             IDateTime time) : base(options)
         {
             _time = time;
