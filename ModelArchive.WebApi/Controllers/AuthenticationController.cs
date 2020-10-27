@@ -1,31 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using ModelArchive.Application.Contracts.Authentication;
-using ModelArchive.WebApi.Models.Authentication;
+using ModelArchive.Application.Modules.Authentication.Commands.LoginUserForm;
+using ModelArchive.Application.Modules.Authentication.Commands.RegisterUserForm;
+using System.Threading.Tasks;
 
 namespace ModelArchive.WebApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthenticationController : ControllerBase
-    {
-        private readonly IAuthenticationService _auth;
 
-        public AuthenticationController(IAuthenticationService auth)
+    public class AuthenticationController : MediatRBaseController
+    {
+        [HttpPost("formreg")]
+        public async Task<IActionResult> RegisterUserViaForm(RegisterUserFormCommand command)
         {
-            _auth = auth;
+            await Mediator.Send(command);
+            return Ok();
         }
 
-        [HttpPost(Name = "formreg")]
-        public async Task<IActionResult> RegisterUserViaForm(UserRegistrationFormModel form)
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginUserViaForm(LoginUserFormCommand command)
         {
-            var result = await _auth.Register(form.UserName, form.Email, form.Password);
-            return Ok(result);
+            await Mediator.Send(command);
+            return Ok();
         }
     }
 }

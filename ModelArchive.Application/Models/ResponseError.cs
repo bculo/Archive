@@ -1,18 +1,14 @@
-﻿using System;
+﻿using ModelArchive.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ModelArchive.Application.Models
 {
-    public class ResponseError
+    public class ResponseError : KeyValue
     {
-        public string Key { get; set; }
-        public string Message { get; set; }
-
-        public ResponseError(string key, string message)
+        public ResponseError(string key, string value) : base(key, value)
         {
-            Key = key ?? throw new ArgumentNullException(nameof(key));
-            Message = message ?? throw new ArgumentNullException(nameof(message));
         }
     }
 }

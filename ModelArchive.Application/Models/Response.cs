@@ -5,6 +5,9 @@ using System.Threading;
 
 namespace ModelArchive.Application.Models
 {
+    /// <summary>
+    /// Used in handlers
+    /// </summary>
     public static class Response
     {
         public static Response<T> Error<T>(string key, string message)
@@ -14,7 +17,7 @@ namespace ModelArchive.Application.Models
 
         public static Response<T> Success<T>(T result)
         {
-            return new Response<T>(result)
+            return new Response<T>(result);
         }
     }
 

@@ -6,6 +6,6 @@ namespace ModelArchive.Common
 {
     public interface IDateTime
     {
-        public DateTime Now { get; set; }
+        public DateTime Now { get; }
     }
 }
