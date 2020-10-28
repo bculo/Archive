@@ -1,20 +1,17 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using ModelArchive.Common;
 using ModelArchive.Core.Entities;
 using ModelArchive.Persistence.Configurations;
+using ModelArchive.Persistence.Identity;
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ModelArchive.Persistence
 {
-    public class ArchiveDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>
+    public class ArchiveDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
     {
         private readonly IDateTime _time;
 

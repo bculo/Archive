@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using ModelArchive.Application.Contracts;
 using ModelArchive.Application.Models;
 using System;
@@ -11,16 +12,17 @@ namespace ModelArchive.Application.Modules.Authentication.Commands.RegisterUserF
 {
     class RegisterUserFormHandler : IRequestHandler<RegisterUserFormCommand, Response<Unit>>
     {
-        private readonly IAuthService _service;
+        private readonly ISignInOutService _service;
+        private readonly IHttpContextAccessor _accessor;
 
-        public RegisterUserFormHandler(IAuthService service)
+        public RegisterUserFormHandler(ISignInOutService service, IHttpContextAccessor accessor)
         {
             _service = service;
+            _accessor = accessor;
         }
 
         public async Task<Response<Unit>> Handle(RegisterUserFormCommand request, CancellationToken cancellationToken)
         {
-            await _service.Register(request.UserName, request.Email, request.Password);
 
             return Response.Success(Unit.Value);
         }

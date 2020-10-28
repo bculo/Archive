@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ModelArchive.Persistence.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,7 +15,7 @@ namespace ModelArchive.Persistence.Configurations
 
             modelBuilder.Entity<IdentityUserClaim<Guid>>(entity => entity.ToTable("IdentityUserClaim", schemaName));
             modelBuilder.Entity<IdentityRoleClaim<Guid>>(entity => entity.ToTable("IdentityRoleClaim", schemaName));
-            modelBuilder.Entity<IdentityUser<Guid>>(entity => entity.ToTable("IdentityUser", schemaName));
+            modelBuilder.Entity<AppUser>(entity => entity.ToTable("IdentityUser", schemaName));
             modelBuilder.Entity<IdentityUserRole<Guid>>(entity => entity.ToTable("IdentityUserRole", schemaName));
             modelBuilder.Entity<IdentityRole<Guid>>(entity => entity.ToTable("IdentityRole", schemaName));
             modelBuilder.Entity<IdentityUserToken<Guid>>(entity => entity.ToTable("IdentityUserToken", schemaName));

@@ -18,16 +18,18 @@ namespace ModelArchive.Core.Queries
         }
     }
 
-    public class Query<TResult> : KeyValueContainer<TResult>
+    public class Query<TResult> : KeyValueErrorContainer
     {
+        public TResult Result { get; set; }
+
         public Query() : base()
         {
 
         }
 
-        public Query(TResult result) : base(result)
+        public Query(TResult result) : base()
         {
-
+            Result = result ?? throw new ArgumentNullException(nameof(result));
         }
     }
 }

@@ -4,8 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ModelArchive.WebApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+
     public abstract class MediatRBaseController : ControllerBase
     {
         private IMediator _mediator;

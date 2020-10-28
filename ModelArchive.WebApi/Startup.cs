@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +13,13 @@ using Microsoft.Extensions.Options;
 using ModelArchive.Application.Behaviours;
 using ModelArchive.Application.Config;
 using ModelArchive.Application.Contracts;
+using ModelArchive.Application.Contracts.Repositories;
 using ModelArchive.Common;
 using ModelArchive.Infrastracture.Services;
 using ModelArchive.Persistence;
+using ModelArchive.Persistence.Identity;
+using ModelArchive.Persistence.Repositories;
+using ModelArchive.WebApi.Services;
 using System;
 using System.Linq;
 
@@ -50,8 +56,12 @@ namespace ModelArchive.WebApi
                 options.UseSqlServer(Configuration.GetConnectionString("ModelArchive"))
             );
 
+            //Data Protection
+            services.AddDataProtection()
+                .SetApplicationName("model-archive");
+
             //add identity
-            services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
+            services.AddIdentity<AppUser, IdentityRole<Guid>>()
                 .AddErrorDescriber<MultilanguageIdentityErrorDescriber>()
                 .AddEntityFrameworkStores<ArchiveDbContext>();
 
@@ -76,6 +86,7 @@ namespace ModelArchive.WebApi
                 options.User.RequireUniqueEmail = identity.User.RequireUniqueEmail;
             });
 
+
             //Define authentication method
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -85,10 +96,25 @@ namespace ModelArchive.WebApi
                     options.SlidingExpiration = identity.Cookie.SlidingExpiration;
                 });
 
+            //Defaine authorizaion Default policy
+            services.AddAuthorization(configure =>
+            {
+                configure.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .Build();
+            });
+
+            //For HttpContext access
+            services.AddHttpContextAccessor();
+
             //DI
             services.AddTransient<IDateTime, DateTimeService>();
              
-            services.AddScoped<IAuthService, IdentityAuthService>();
+            services.AddScoped<ISignInOutService, SignInOutService>();
+            services.AddScoped<ICurrentUser, CurrentUserService>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
 
             //MediatR
             services.AddMediatR(typeof(MediatRRegistration).Assembly);

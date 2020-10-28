@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModelArchive.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -21,34 +22,18 @@ namespace ModelArchive.Application.Models
         }
     }
 
-    public class Response<T>
+    public class Response<TResult> : KeyValueErrorContainer
     {
-        public T Result { get; set; }
+        public TResult Result { get; set; }
 
-        public List<ResponseError> Errors { get; set; }
-
-        public bool Success => Errors?.Count == 0;
-
-        public Response()
+        public Response() : base()
         {
-            Errors = new List<ResponseError>();
+
         }
 
-        public Response(T result) : this()
+        public Response(TResult result) : base()
         {
-            Result = result;
-        }
-
-        public Response<T> AddError(string key, string message)
-        {
-            Errors.Add(new ResponseError(key, message));
-            return this;
-        }
-
-        public Response<T> AddError(ResponseError error)
-        {
-            Errors.Add(error);
-            return this;
+            Result = result ?? throw new ArgumentNullException(nameof(result));
         }
     }
 }

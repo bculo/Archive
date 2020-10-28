@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ModelArchive.Application.Models
 {
-    public class ResponseError : KeyValue
+    public class ResponseError : KeyValueError
     {
         public ResponseError(string key, string value) : base(key, value)
         {
