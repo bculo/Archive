@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ModelArchive.Application\ModelArchive.Application.csproj" />
-    <ProjectReference Include="..\ModelArchive.Persistence\ModelArchive.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

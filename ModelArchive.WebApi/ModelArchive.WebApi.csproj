@@ -13,5 +13,11 @@
     <ProjectReference Include="..\ModelArchive.Persistence\ModelArchive.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Controllers\AuthenticationController.fr-FR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
 
 </Project>

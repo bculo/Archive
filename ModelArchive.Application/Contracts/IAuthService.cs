@@ -1,13 +1,11 @@
 ﻿using ModelArchive.Core.Queries;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ModelArchive.Application.Contracts
 {
-    public interface ISignInOutService
+    public interface IAuthService
     {
+        Task CreateCultureCookie(string culture);
         Task SignInAsync(ArchiveUser user);
         Task SignOutAsync();
     }

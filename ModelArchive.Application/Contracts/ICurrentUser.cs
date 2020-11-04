@@ -8,6 +8,6 @@ namespace ModelArchive.Application.Contracts
     {
         public Guid UserId { get; }
 
-
+        public string UserName { get; }
     }
 }

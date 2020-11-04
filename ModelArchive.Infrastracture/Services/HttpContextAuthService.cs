@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
+using ModelArchive.Application.Config;
 using ModelArchive.Application.Contracts;
-using ModelArchive.Application.Contracts.Repositories;
+using ModelArchive.Common;
 using ModelArchive.Core.Queries;
-using ModelArchive.Persistence.Identity;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -13,12 +14,15 @@ using System.Threading.Tasks;
 
 namespace ModelArchive.Infrastracture.Services
 {
-    public class SignInOutService : ISignInOutService
+    public class HttpContextAuthService : IAuthService
     {
+        private readonly IDateTime _time;
         private readonly IHttpContextAccessor _accessor;
 
-        public SignInOutService(IHttpContextAccessor accessor)
+        public HttpContextAuthService(IHttpContextAccessor accessor,
+            IDateTime time)
         {
+            _time = time;
             _accessor = accessor;
         }
 
@@ -34,7 +38,7 @@ namespace ModelArchive.Infrastracture.Services
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
             await _accessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-            
+            await CreateCultureCookie(user.Language);
         }
 
         private List<Claim> PrepareClaims(ArchiveUser user)
@@ -49,6 +53,23 @@ namespace ModelArchive.Infrastracture.Services
         public async Task SignOutAsync()
         {
             await _accessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            //Delete culture cookie
+            _accessor.HttpContext.Response.Cookies.Delete(CookieRequestCultureProvider.DefaultCookieName);
+        }
+
+        public Task CreateCultureCookie(string culture)
+        {
+            _accessor.HttpContext.Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new Microsoft.AspNetCore.Http.CookieOptions
+                {
+                    Expires = DateTimeOffset.Now.AddDays(30)
+                }
+            );
+
+            return Task.CompletedTask;
         }
     }
 }

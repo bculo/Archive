@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using ModelArchive.Application.Contracts.Repositories;
 using ModelArchive.Core.Queries;
+using ModelArchive.Persistence.Extensions;
 using ModelArchive.Persistence.Identity;
 using System;
 using System.Collections.Generic;
@@ -29,9 +30,18 @@ namespace ModelArchive.Persistence.Repositories
             return appUser.ToArchiveUser();
         }
 
-        public Task<ArchiveUser> AddUser(string userName, string email, string password)
+        public async Task<StorageResult<ArchiveUser>> AddUser(string userName, string email, string password)
         {
-            throw new NotImplementedException();
+            AppUser newUserInstance = new AppUser { UserName = userName, Email = email };
+
+            var identityResult = await _userManager.CreateAsync(newUserInstance, password);
+
+            if (identityResult.Succeeded)
+            {
+                return StorageResult.Success(newUserInstance.ToArchiveUser());
+            }
+
+            return identityResult.ToStorageResult<ArchiveUser>();
         }
 
         public async Task<bool> SetUserLanguage(string userIdentifier, string language)

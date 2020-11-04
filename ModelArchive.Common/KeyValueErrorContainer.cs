@@ -21,6 +21,11 @@ namespace ModelArchive.Common
             Errors.Add(error);
         }
 
+        public void AddErrors(IEnumerable<KeyValueError> errors)
+        {
+            Errors.AddRange(errors);
+        }
+
         public IReadOnlyDictionary<string, string> ToDictionary()
         {
             if (Success)

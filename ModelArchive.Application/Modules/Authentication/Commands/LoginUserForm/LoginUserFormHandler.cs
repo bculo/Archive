@@ -1,12 +1,11 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Http;
+﻿
+using MediatR;
+using Microsoft.Extensions.Localization;
 using ModelArchive.Application.Contracts;
 using ModelArchive.Application.Contracts.Repositories;
 using ModelArchive.Application.Exceptions;
 using ModelArchive.Application.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using ModelArchive.Application.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,19 +14,16 @@ namespace ModelArchive.Application.Modules.Authentication.Commands.LoginUserForm
     class LoginUserFormHandler : IRequestHandler<LoginUserFormCommand, Response<Unit>>
     {
         private readonly IUserRepository _repo;
-        private readonly ISignInOutService _service;
-        private readonly ICurrentUser _user;
-        private readonly IHttpContextAccessor _accessor;
+        private readonly IAuthService _service;
+        private readonly IStringLocalizer<HandlerResponseMessages> _localizer;
 
         public LoginUserFormHandler(IUserRepository repo,
-            ISignInOutService service,
-            ICurrentUser user,
-            IHttpContextAccessor accessor)
+            IAuthService service,
+            IStringLocalizer<HandlerResponseMessages> localizer)
         {
             _repo = repo;
             _service = service;
-            _user = user;
-            _accessor = accessor;
+            _localizer = localizer;
         }
 
         public Response<Unit> Result { get; set; }
@@ -38,8 +34,8 @@ namespace ModelArchive.Application.Modules.Authentication.Commands.LoginUserForm
 
             if (!valid)
             {
-                Result = Response.Error<Unit>("WrongCredentials", "Wrong user credentials");
-                throw new AuthenticationException(Result);
+                Result = Response.Error<Unit>("WrongCredentials", _localizer["Wrong user credentials"].Value);
+                throw new ArchiveAuthenticationException(Result);
             }
 
             var user = await _repo.GetArchiveUser(request.Identifier);

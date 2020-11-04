@@ -10,7 +10,7 @@ namespace ModelArchive.Application.Contracts.Repositories
     {
         Task<bool> ValidCredentials(string identifier, string password);
         Task<ArchiveUser> GetArchiveUser(string identifier);
-        Task<ArchiveUser> AddUser(string userName, string email, string password);
+        Task<StorageResult<ArchiveUser>> AddUser(string userName, string email, string password);
         Task<bool> SetUserLanguage(string userIdentifier, string language);
     }
 }

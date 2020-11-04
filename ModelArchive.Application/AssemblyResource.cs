@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ModelArchive.Application.Behaviours
+namespace ModelArchive.Application
 {
-    public class MediatRRegistration
+    public class AssemblyResource
     {
     }
 }

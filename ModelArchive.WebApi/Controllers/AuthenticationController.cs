@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Server.HttpSys;
 using ModelArchive.Application.Modules.Authentication.Commands.LoginUserForm;
+using ModelArchive.Application.Modules.Authentication.Commands.Logout;
 using ModelArchive.Application.Modules.Authentication.Commands.RegisterUserForm;
+using ModelArchive.Application.Modules.Authentication.Commands.SetUserLanguage;
 using System.Threading.Tasks;
 
 namespace ModelArchive.WebApi.Controllers
@@ -16,23 +16,27 @@ namespace ModelArchive.WebApi.Controllers
         [HttpPost("formreg")]
         public async Task<IActionResult> RegisterUserViaForm(RegisterUserFormCommand command)
         {
-            await Mediator.Send(command);
-            return Ok();
+            return Ok(await Mediator.Send(command));
         }
 
-    
-        [HttpGet("test")]
         [Authorize]
-        public async Task<IActionResult> Test()
+        [HttpPost("language")]
+        public async Task<IActionResult> SetUserLanguage(SetUserLanguageCommand command)
         {
-            return Ok("OK");
+            return Ok(await Mediator.Send(command));
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> LoginUserViaForm(LoginUserFormCommand command)
         {
-            await Mediator.Send(command);
-            return Ok();
+            return Ok(await Mediator.Send(command));
+        }
+
+        [Authorize]
+        [HttpGet("signout")]
+        public async Task<IActionResult> SignOut()
+        {
+            return Ok(await Mediator.Send(new LogoutCommand { }));
         }
     }
 }

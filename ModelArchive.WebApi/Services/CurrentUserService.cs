@@ -25,14 +25,31 @@ namespace ModelArchive.WebApi.Services
             {
                 string userId = ClaimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                if (string.IsNullOrEmpty(userId))
-                    throw new InvalidOperationException(nameof(userId));
+                GuardAgainstNull(userId);
 
                 if (Guid.TryParse(userId, out Guid result))
                     return result;
 
-                throw new InvalidOperationException(nameof(userId));
+                throw new InvalidOperationException($"{nameof(userId)} is not GUID");
             }
+        }
+
+        public string UserName
+        {
+            get
+            {
+                string userName = ClaimsPrincipal.FindFirstValue(ClaimTypes.Name);
+
+                GuardAgainstNull(userName);
+
+                return userName;
+            }
+        }
+
+        private void GuardAgainstNull(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException(nameof(value));
         }
     }
 }
