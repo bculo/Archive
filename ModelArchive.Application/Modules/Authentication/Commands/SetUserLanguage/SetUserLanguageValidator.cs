@@ -1,6 +1,9 @@
 ﻿using FluentValidation;
+using FluentValidation.Validators;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using ModelArchive.Application.Config;
+using ModelArchive.Application.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,16 +15,17 @@ namespace ModelArchive.Application.Modules.Authentication.Commands.SetUserLangua
     {
         private readonly IOptions<LanguageOptions> _options;
 
-        public SetUserLanguageValidator(IOptions<LanguageOptions> options)
+        public SetUserLanguageValidator(IOptions<LanguageOptions> options,
+            IStringLocalizer<FluentValidationMessages> localizer)
         {
             _options = options;
 
-            RuleFor(i => i.Language).NotEmpty();
-
+            RuleFor(i => i.Language).NotEmpty()
+                .WithMessage(localizer[FVC.NotEmpty].Value);
             When(i => !string.IsNullOrEmpty(i.Language), () =>
             {
                 RuleFor(i => i.Language).Must(SupportedLanguage)
-                                        .WithMessage("Odabrani jezik nije podržan");
+                    .WithMessage(localizer[FVC.Language].Value);
             });
         }
 

@@ -1,3 +1,4 @@
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -25,6 +26,7 @@ using ModelArchive.WebApi.Services;
 using System;
 using System.Globalization;
 using System.Net;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 
 namespace ModelArchive.WebApi
@@ -72,7 +74,8 @@ namespace ModelArchive.WebApi
                 .SetApplicationName("model-archive");
 
             //add identity
-            services.AddIdentityCore<AppUser>()
+            //services.AddIdentityCore<AppUser>()
+            services.AddIdentity<AppUser, IdentityRole<Guid>>()
                 .AddErrorDescriber<MultilanguageIdentityErrorDescriber>()
                 .AddEntityFrameworkStores<ArchiveDbContext>();
 
@@ -98,38 +101,26 @@ namespace ModelArchive.WebApi
             });
 
             //Define authentication method
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            services.AddAuthentication()
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                 {
                     options.Cookie.HttpOnly = identity.Cookie.HttpOnly;
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(identity.Cookie.ExpireTimeSpan);
                     options.SlidingExpiration = identity.Cookie.SlidingExpiration;
-                    options.
-                });
-
-            services.ConfigureApplicationCookie(config =>
-            {
-                config.Events = new CookieAuthenticationEvents
-                {
-                    OnRedirectToLogin = ctx =>
+                    options.LoginPath = string.Empty;
+                    options.AccessDeniedPath = string.Empty;
+                    options.Events.OnRedirectToLogin = ctx =>
                     {
                         if (ctx.Request.Path.StartsWithSegments("/api"))
                         {
                             ctx.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                            ctx.RedirectUri = null;
-                        }
-                        else
-                        {
-                            ctx.Response.Redirect(ctx.RedirectUri);
                         }
 
-                        return Task.FromResult(0);
-                    }
-                };
-            });
+                        return Task.CompletedTask;
+                    };
+                });
 
             //Defaine authorizaion Default policy
-            /*
             services.AddAuthorization(configure =>
             {
                 configure.DefaultPolicy =
@@ -141,9 +132,7 @@ namespace ModelArchive.WebApi
                     })
                     .Build();
             });
-            */
             
-
             //For HttpContext access
             services.AddHttpContextAccessor();
 

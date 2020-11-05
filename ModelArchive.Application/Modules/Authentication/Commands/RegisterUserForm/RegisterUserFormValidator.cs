@@ -1,7 +1,10 @@
 ﻿using FluentValidation;
+using FluentValidation.Validators;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using ModelArchive.Application.Config;
 using ModelArchive.Application.Contracts.Repositories;
+using ModelArchive.Application.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,33 +16,43 @@ namespace ModelArchive.Application.Modules.Authentication.Commands.RegisterUserF
         private readonly AuthenticationOptions _options;
 
         public RegisterUserFormValidator(IUserRepository repo, 
-            IOptions<AuthenticationOptions> options)
+            IOptions<AuthenticationOptions> options,
+            IStringLocalizer<FluentValidationMessages> localizer)
         {
             _repo = repo;
             _options = options.Value;
 
-            RuleFor(i => i.UserName).NotEmpty();
-            /*
+            //Username section
+            RuleFor(i => i.UserName).NotEmpty()
+                .WithMessage(localizer[FVC.NotEmpty].Value);
             When(i => !string.IsNullOrEmpty(i.UserName), () =>
             {
-                RuleFor(i => i.UserName).MustAsync(UserNameUnique).WithMessage("UserName is already taken");
+                RuleFor(i => i.UserName).MustAsync(UserNameUnique)
+                    .WithMessage(localizer[FVC.UserNameUnique].Value);
             });
-            */
 
+            //Password section
             RuleFor(i => i.Password).NotEmpty()
-                .MinimumLength(_options.Password.RequiredLength);
-
+                .WithMessage(localizer[FVC.NotEmpty].Value)
+                .MinimumLength(_options.Password.RequiredLength)
+                .WithMessage(localizer[FVC.Minimum].Value);
+                
+            //Repeat password section
             RuleFor(i => i.RepeatPassword).NotEmpty()
-                .Must((model, pass) => model.Password == pass)
-                .WithMessage("Repeat password must be same as Password field");
+                .WithMessage(localizer[FVC.NotEmpty].Value)
+                .Equal(t => t.Password)
+                .WithMessage(localizer[FVC.Equal].Value);
 
-            RuleFor(i => i.Email).NotEmpty().EmailAddress();
-            /*
+            //Email section
+            RuleFor(i => i.Email).NotEmpty()
+                .WithMessage(localizer[FVC.NotEmpty].Value)
+                .EmailAddress()
+                .WithMessage(localizer[FVC.Email].Value);
             When(i => !string.IsNullOrEmpty(i.Email), () =>
             {
-                RuleFor(i => i.Email).MustAsync(EmailUnique).WithMessage("Email is already taken");
+                RuleFor(i => i.Email).MustAsync(EmailUnique)
+                    .WithMessage(localizer[FVC.EmailUnique].Value);
             });
-            */
         }
 
         public async Task<bool> EmailUnique(string email, CancellationToken token = default)
