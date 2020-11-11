@@ -16,7 +16,6 @@ namespace ModelArchive.Common
 
         public void AddPropertyError(string propertyName, string error)
         {
-            //provjeri da li postoji property, i ako postoji dodaj mu error
             if(Errors.TryGetValue(propertyName, out HashSet<string> values))
             {
                 if (values is null)

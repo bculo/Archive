@@ -40,7 +40,7 @@ namespace ModelArchive.Application.Modules.Authentication.Commands.RegisterUserF
             throw new ArchiveException();
         }
 
-        private PropertyErrorContainer MapStorageResultsToPropertyErrors(StorageResult<ArchiveUser> storageResult)
+        private PropertyErrorContainer MapStorageResultsToPropertyErrors(QueryResult<UserQuery> storageResult)
         {
             var propertyErrors = new PropertyErrorContainer();
 
@@ -56,7 +56,7 @@ namespace ModelArchive.Application.Modules.Authentication.Commands.RegisterUserF
             return propertyErrors;
         }
 
-        public IEnumerable<string> GetErrorsForProperty(string property, StorageResult<ArchiveUser> storageResult)
+        public IEnumerable<string> GetErrorsForProperty(string property, QueryResult<UserQuery> storageResult)
         {
             return storageResult.Errors
                     .Where(i => i.Key.Contains(property, StringComparison.CurrentCultureIgnoreCase))

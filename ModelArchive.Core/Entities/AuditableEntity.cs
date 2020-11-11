@@ -1,14 +1,25 @@
-﻿using System;
+﻿using ModelArchive.Core.Enums;
+using ModelArchive.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ModelArchive.Core.Entities
 {
+    /// <summary>
+    /// Entites that can be modified
+    /// </summary>
     public abstract class AuditableEntity : IEntity
     {
-        public DateTime Created { get; set; }
-        public Guid CreatedBy { get; set; }
-        public DateTime? LastModified { get; set; }
-        public Guid LastModifiedBy { get; set; }
+        /// <summary>
+        /// Modification date
+        /// </summary>
+        public DateTime LastModified { get; set; }
+
+        /// <summary>
+        /// Entity state
+        /// Default is Created 
+        /// </summary>
+        public EntityState EntityState { get; set; } = EntityState.Created;
     }
 }

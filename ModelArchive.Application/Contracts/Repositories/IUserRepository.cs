@@ -9,8 +9,8 @@ namespace ModelArchive.Application.Contracts.Repositories
     public interface IUserRepository
     {
         Task<bool> ValidCredentials(string identifier, string password);
-        Task<ArchiveUser> GetArchiveUser(string identifier);
-        Task<StorageResult<ArchiveUser>> AddUser(string userName, string email, string password);
+        Task<UserQuery> GetArchiveUser(string identifier);
+        Task<QueryResult<UserQuery>> AddUser(string userName, string email, string password);
         Task<bool> SetUserLanguage(string userIdentifier, string language);
     }
 }

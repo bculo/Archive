@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ModelArchive.Core.Queries
 {
-    public class StorageError : KeyValueError
+    public class QueryError : KeyValueError
     {
-        public StorageError(string key, string value) : base(key, value)
+        public QueryError(string key, string value) : base(key, value)
         {
         }
     }

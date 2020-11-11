@@ -6,7 +6,7 @@ namespace ModelArchive.Application.Contracts
     public interface IAuthService
     {
         Task CreateCultureCookie(string culture);
-        Task SignInAsync(ArchiveUser user);
+        Task SignInAsync(UserQuery user);
         Task SignOutAsync();
     }
 }

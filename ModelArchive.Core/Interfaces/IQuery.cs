@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ModelArchive.Core.Entities
+namespace ModelArchive.Core.Interfaces
 {
-    public interface IEntity
+    public interface IQuery
     {
     }
 }

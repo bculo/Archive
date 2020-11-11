@@ -26,7 +26,7 @@ namespace ModelArchive.Infrastracture.Services
             _accessor = accessor;
         }
 
-        public async Task SignInAsync(ArchiveUser user)
+        public async Task SignInAsync(UserQuery user)
         {
             if (user is null)
                 throw new ArgumentNullException(nameof(user));
@@ -38,10 +38,11 @@ namespace ModelArchive.Infrastracture.Services
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
             await _accessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+
             await CreateCultureCookie(user.Language);
         }
 
-        private List<Claim> PrepareClaims(ArchiveUser user)
+        private List<Claim> PrepareClaims(UserQuery user)
         {
             return new List<Claim>
             {

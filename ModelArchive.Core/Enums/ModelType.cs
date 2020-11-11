@@ -8,6 +8,6 @@ namespace ModelArchive.Core.Enums
     public enum ModelType
     {
         [Description("Stereolithography Mesh")]
-        STL
+        STL = 0
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ModelArchive.Application.Contracts;
 using ModelArchive.Common;
 using ModelArchive.Core.Entities;
 using ModelArchive.Persistence.Configurations;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ModelArchive.Persistence
 {
-    public class ArchiveDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
+    public class ArchiveDbContext : IdentityDbContext<AuthenticationUser, AuthenticationRole, Guid>
     {
         private readonly IDateTime _time;
 
@@ -46,9 +47,13 @@ namespace ModelArchive.Persistence
                 switch (entry.State)
                 {
                     case EntityState.Added:
+                        entry.Entity.EntityState = Core.Enums.EntityState.Created;
+                        entry.Entity.LastModified = _time.Now;
                         break;
 
                     case EntityState.Modified:
+                        entry.Entity.LastModified = _time.Now;
+                        entry.Entity.EntityState = Core.Enums.EntityState.Updated;
                         break;
                 }
             }

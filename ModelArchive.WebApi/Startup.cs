@@ -63,6 +63,7 @@ namespace ModelArchive.WebApi
             services.AddOptions();
             services.Configure<AuthenticationOptions>(Configuration.GetSection(nameof(AuthenticationOptions)));
             services.Configure<LanguageOptions>(Configuration.GetSection(nameof(LanguageOptions)));
+            services.Configure<RoleOptions>(Configuration.GetSection(nameof(RoleOptions)));
 
             //Define database
             services.AddDbContext<ArchiveDbContext>(options =>
@@ -74,8 +75,9 @@ namespace ModelArchive.WebApi
                 .SetApplicationName("model-archive");
 
             //add identity
-            //services.AddIdentityCore<AppUser>()
-            services.AddIdentity<AppUser, IdentityRole<Guid>>()
+            //services.AddIdentity<AuthenticationUser, IdentityRole<Guid>>()
+            services.AddIdentityCore<AuthenticationUser>()
+                .AddRoles<AuthenticationRole>()
                 .AddErrorDescriber<MultilanguageIdentityErrorDescriber>()
                 .AddEntityFrameworkStores<ArchiveDbContext>();
 
