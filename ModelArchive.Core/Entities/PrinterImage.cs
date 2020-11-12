@@ -7,6 +7,7 @@ namespace ModelArchive.Core.Entities
 {
     public class PrinterImage : AuditableEntity, IImage
     {
+        public Guid Id { get; set; }
         public string Extension { get; set; }
         public string FullName { get; set; }
         public string FolderName { get; set; }

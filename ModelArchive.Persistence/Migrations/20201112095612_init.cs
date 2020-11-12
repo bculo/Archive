@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelArchive.Persistence.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,20 +14,17 @@ namespace ModelArchive.Persistence.Migrations
                 name: "Dbo");
 
             migrationBuilder.CreateTable(
-                name: "ModelFolder",
+                name: "ArchiveUser",
                 schema: "Dbo",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<Guid>(nullable: false),
-                    LastModified = table.Column<DateTime>(nullable: true),
-                    LastModifiedBy = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(maxLength: 300, nullable: false)
+                    UserName = table.Column<string>(maxLength: 100, nullable: false),
+                    IdentityId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ModelFolder", x => x.Id);
+                    table.PrimaryKey("PK_ArchiveUser", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -64,7 +61,8 @@ namespace ModelArchive.Persistence.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    DefaultLanguage = table.Column<string>(maxLength: 30, nullable: false, defaultValue: "en-US")
                 },
                 constraints: table =>
                 {
@@ -72,30 +70,51 @@ namespace ModelArchive.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Model3D",
+                name: "ModelFolder",
                 schema: "Dbo",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<Guid>(nullable: false),
-                    LastModified = table.Column<DateTime>(nullable: true),
-                    LastModifiedBy = table.Column<Guid>(nullable: false),
-                    FileName = table.Column<string>(maxLength: 100, nullable: false),
-                    ModelType = table.Column<int>(nullable: false),
-                    Description = table.Column<string>(maxLength: 5000, nullable: true),
-                    FolderId = table.Column<Guid>(nullable: false)
+                    LastModified = table.Column<DateTime>(nullable: false),
+                    EntityState = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 300, nullable: false),
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Model3D", x => x.Id);
+                    table.PrimaryKey("PK_ModelFolder", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Model3D_ModelFolder_FolderId",
-                        column: x => x.FolderId,
+                        name: "FK_ModelFolder_ArchiveUser_UserId",
+                        column: x => x.UserId,
                         principalSchema: "Dbo",
-                        principalTable: "ModelFolder",
+                        principalTable: "ArchiveUser",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Printer",
+                schema: "Dbo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    LastModified = table.Column<DateTime>(nullable: false),
+                    EntityState = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 200, nullable: false),
+                    Model = table.Column<string>(maxLength: 200, nullable: false),
+                    Description = table.Column<string>(maxLength: 5000, nullable: true),
+                    UserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Printer", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Printer_ArchiveUser_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "Dbo",
+                        principalTable: "ArchiveUser",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -172,7 +191,9 @@ namespace ModelArchive.Persistence.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(nullable: false),
-                    RoleId = table.Column<Guid>(nullable: false)
+                    RoleId = table.Column<Guid>(nullable: false),
+                    UserId1 = table.Column<Guid>(nullable: true),
+                    RoleId1 = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -185,12 +206,26 @@ namespace ModelArchive.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId1",
+                        column: x => x.RoleId1,
+                        principalSchema: "Security",
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalSchema: "Security",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalSchema: "Security",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -216,16 +251,64 @@ namespace ModelArchive.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Model3D",
+                schema: "Dbo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    LastModified = table.Column<DateTime>(nullable: false),
+                    EntityState = table.Column<int>(nullable: false),
+                    FileName = table.Column<string>(maxLength: 100, nullable: false),
+                    ModelType = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(maxLength: 5000, nullable: true),
+                    FolderId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Model3D", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Model3D_ModelFolder_FolderId",
+                        column: x => x.FolderId,
+                        principalSchema: "Dbo",
+                        principalTable: "ModelFolder",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PrinterImage",
+                schema: "Dbo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    LastModified = table.Column<DateTime>(nullable: false),
+                    EntityState = table.Column<int>(nullable: false),
+                    FullName = table.Column<string>(maxLength: 100, nullable: false),
+                    FolderName = table.Column<string>(maxLength: 100, nullable: false),
+                    PrinterId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PrinterImage", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PrinterImage_Printer_PrinterId",
+                        column: x => x.PrinterId,
+                        principalSchema: "Dbo",
+                        principalTable: "Printer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ModelImage",
                 schema: "Dbo",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<Guid>(nullable: false),
-                    LastModified = table.Column<DateTime>(nullable: true),
-                    LastModifiedBy = table.Column<Guid>(nullable: false),
-                    ImageName = table.Column<string>(maxLength: 100, nullable: false),
+                    LastModified = table.Column<DateTime>(nullable: false),
+                    EntityState = table.Column<int>(nullable: false),
+                    FullName = table.Column<string>(maxLength: 100, nullable: false),
+                    FolderName = table.Column<string>(maxLength: 100, nullable: false),
                     ModelId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -240,6 +323,32 @@ namespace ModelArchive.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                schema: "Security",
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { new Guid("e76b37a7-8e06-4df2-8961-f78ab2ef2472"), "01755524-7dc7-4ccf-97d4-48364c8f4a07", "admin", "ADMIN" });
+
+            migrationBuilder.InsertData(
+                schema: "Security",
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { new Guid("7aae4732-fb79-435a-97cf-3764de5a3dfa"), "c055e366-466f-4b20-ba70-e6a75ed6fea8", "user", "USER" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArchiveUser_IdentityId",
+                schema: "Dbo",
+                table: "ArchiveUser",
+                column: "IdentityId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArchiveUser_UserName",
+                schema: "Dbo",
+                table: "ArchiveUser",
+                column: "UserName",
+                unique: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_Model3D_FolderId",
                 schema: "Dbo",
@@ -247,10 +356,28 @@ namespace ModelArchive.Persistence.Migrations
                 column: "FolderId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ModelFolder_UserId",
+                schema: "Dbo",
+                table: "ModelFolder",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ModelImage_ModelId",
                 schema: "Dbo",
                 table: "ModelImage",
                 column: "ModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Printer_UserId",
+                schema: "Dbo",
+                table: "Printer",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PrinterImage_PrinterId",
+                schema: "Dbo",
+                table: "PrinterImage",
+                column: "PrinterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -285,6 +412,18 @@ namespace ModelArchive.Persistence.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_RoleId1",
+                schema: "Security",
+                table: "AspNetUserRoles",
+                column: "RoleId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_UserId1",
+                schema: "Security",
+                table: "AspNetUserRoles",
+                column: "UserId1");
+
+            migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 schema: "Security",
                 table: "AspNetUsers",
@@ -303,6 +442,10 @@ namespace ModelArchive.Persistence.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ModelImage",
+                schema: "Dbo");
+
+            migrationBuilder.DropTable(
+                name: "PrinterImage",
                 schema: "Dbo");
 
             migrationBuilder.DropTable(
@@ -330,6 +473,10 @@ namespace ModelArchive.Persistence.Migrations
                 schema: "Dbo");
 
             migrationBuilder.DropTable(
+                name: "Printer",
+                schema: "Dbo");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles",
                 schema: "Security");
 
@@ -339,6 +486,10 @@ namespace ModelArchive.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "ModelFolder",
+                schema: "Dbo");
+
+            migrationBuilder.DropTable(
+                name: "ArchiveUser",
                 schema: "Dbo");
         }
     }

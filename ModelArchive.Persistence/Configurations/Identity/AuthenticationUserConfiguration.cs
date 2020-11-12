@@ -7,9 +7,9 @@ using System;
 
 namespace ModelArchive.Persistence.Configurations.Identity
 {
-    public class AuthenticationUserConfiguration : IdentityConfiguration<AuthenticationUser>
+    public class AuthenticationUserConfiguration : IEntityTypeConfiguration<AuthenticationUser>
     {
-        public override void Configure(EntityTypeBuilder<AuthenticationUser> builder)
+        public void Configure(EntityTypeBuilder<AuthenticationUser> builder)
         {
             builder.Property(i => i.DefaultLanguage)
                 .HasMaxLength(30)
@@ -21,7 +21,7 @@ namespace ModelArchive.Persistence.Configurations.Identity
                 .HasForeignKey(i => i.UserId)
                 .IsRequired();
 
-            base.Configure(builder);
+            builder.ToTable(name: "IdentityUser", schema: SchemaType.Security.ToString());
         }
     }
 }

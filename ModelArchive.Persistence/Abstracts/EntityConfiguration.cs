@@ -1,8 +1,18 @@
-﻿namespace ModelArchive.Persistence.Abstracts
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace ModelArchive.Persistence.Abstracts
 {
-    public abstract class EntityConfiguration<T> : AbstractConfiguration<T> where T : class
+    public abstract class EntityConfiguration<T> : IEntityTypeConfiguration<T> where T : class
     {
-        protected override SchemaType GetSchema()
+        protected virtual string TableName => typeof(T).Name;
+
+        public virtual void Configure(EntityTypeBuilder<T> builder)
+        {
+            builder.ToTable(TableName, GetSchema().ToString());
+        }
+
+        protected virtual SchemaType GetSchema()
         {
             return SchemaType.Dbo;
         }

@@ -7,9 +7,9 @@ using System.Text;
 
 namespace ModelArchive.Persistence.Configurations.Dbo
 {
-    class ModelImageConfiguration : EntityConfiguration<ModelImage>
+    public class PrinterImageConfiguration : EntityConfiguration<PrinterImage>
     {
-        public override void Configure(EntityTypeBuilder<ModelImage> builder)
+        public override void Configure(EntityTypeBuilder<PrinterImage> builder)
         {
             builder.HasKey(t => t.Id);
 
@@ -25,5 +25,6 @@ namespace ModelArchive.Persistence.Configurations.Dbo
 
             base.Configure(builder);
         }
+
     }
 }

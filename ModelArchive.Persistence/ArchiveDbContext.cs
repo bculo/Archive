@@ -12,7 +12,9 @@ using System.Threading.Tasks;
 
 namespace ModelArchive.Persistence
 {
-    public class ArchiveDbContext : IdentityDbContext<AuthenticationUser, AuthenticationRole, Guid>
+    public class ArchiveDbContext : IdentityDbContext<AuthenticationUser, AuthenticationRole, Guid,
+         IdentityUserClaim<Guid>, AuthenticationUserRole, IdentityUserLogin<Guid>,
+         IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
         private readonly IDateTime _time;
 

@@ -15,9 +15,9 @@ namespace ModelArchive.Persistence.Configurations
 
             modelBuilder.Entity<IdentityUserClaim<Guid>>(entity => entity.ToTable("IdentityUserClaim", schemaName));
             modelBuilder.Entity<IdentityRoleClaim<Guid>>(entity => entity.ToTable("IdentityRoleClaim", schemaName));
-            modelBuilder.Entity<AuthenticationUser>(entity => entity.ToTable("IdentityUser", schemaName));
+            //modelBuilder.Entity<AuthenticationUser>(entity => entity.ToTable("IdentityUser", schemaName));
             modelBuilder.Entity<AuthenticationUserRole>(entity => entity.ToTable("IdentityUserRole", schemaName));
-            modelBuilder.Entity<AuthenticationRole>(entity => entity.ToTable("IdentityRole", schemaName));
+            //modelBuilder.Entity<AuthenticationRole>(entity => entity.ToTable("IdentityRole", schemaName));
             modelBuilder.Entity<IdentityUserToken<Guid>>(entity => entity.ToTable("IdentityUserToken", schemaName));
             modelBuilder.Entity<IdentityUserLogin<Guid>>(entity => entity.ToTable("IdentityUserLogin", schemaName));
         }

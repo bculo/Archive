@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ModelArchive.Application.Constants;
 using ModelArchive.Core.Entities;
 using ModelArchive.Persistence.Abstracts;
@@ -9,9 +10,10 @@ using System.Text;
 
 namespace ModelArchive.Persistence.Configurations.Identity
 {
-    public class AuthenticationRoleConfiguration : IdentityConfiguration<AuthenticationRole>
+    
+    public class AuthenticationRoleConfiguration : IEntityTypeConfiguration<AuthenticationRole>
     {
-        public override void Configure(EntityTypeBuilder<AuthenticationRole> builder)
+        public void Configure(EntityTypeBuilder<AuthenticationRole> builder)
         {
             builder.HasMany(i => i.UserRoles)
                 .WithOne(i => i.Role)
@@ -20,11 +22,22 @@ namespace ModelArchive.Persistence.Configurations.Identity
 
             builder.HasData(new AuthenticationRole[]
             {
-                new AuthenticationRole { Name = ArchiveRole.ADMIN },
-                new AuthenticationRole { Name = ArchiveRole.USER },
+                new AuthenticationRole 
+                {
+                    Id = Guid.NewGuid(),
+                    Name = ArchiveRole.ADMIN, 
+                    NormalizedName =  ArchiveRole.ADMIN.ToUpper()
+                },
+                new AuthenticationRole 
+                { 
+                    Id = Guid.NewGuid(), 
+                    Name = ArchiveRole.USER, 
+                    NormalizedName =  ArchiveRole.USER.ToUpper() 
+                }
             });
 
-            base.Configure(builder);
+            builder.ToTable(name: "IdentityRole", schema: SchemaType.Security.ToString());
         }
     }
+    
 }

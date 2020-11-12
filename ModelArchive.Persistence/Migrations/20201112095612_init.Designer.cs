@@ -10,8 +10,8 @@ using ModelArchive.Persistence;
 namespace ModelArchive.Persistence.Migrations
 {
     [DbContext(typeof(ArchiveDbContext))]
-    [Migration("20201028081549_Identity_User_Modified")]
-    partial class Identity_User_Modified
+    [Migration("20201112095612_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,34 +21,6 @@ namespace ModelArchive.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles","Security");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
@@ -117,21 +89,6 @@ namespace ModelArchive.Persistence.Migrations
                     b.ToTable("AspNetUserLogins","Security");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles","Security");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -151,21 +108,43 @@ namespace ModelArchive.Persistence.Migrations
                     b.ToTable("AspNetUserTokens","Security");
                 });
 
+            modelBuilder.Entity("ModelArchive.Core.Entities.ArchiveUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("IdentityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityId")
+                        .IsUnique();
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
+                    b.ToTable("ArchiveUser","Dbo");
+                });
+
             modelBuilder.Entity("ModelArchive.Core.Entities.Model3D", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
                         .HasMaxLength(5000);
+
+                    b.Property<int>("EntityState")
+                        .HasColumnType("int");
 
                     b.Property<string>("FileName")
                         .IsRequired()
@@ -175,11 +154,8 @@ namespace ModelArchive.Persistence.Migrations
                     b.Property<Guid>("FolderId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("LastModified")
+                    b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid>("LastModifiedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("ModelType")
                         .HasColumnType("int");
@@ -197,24 +173,23 @@ namespace ModelArchive.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Created")
+                    b.Property<int>("EntityState")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("LastModifiedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(300)")
                         .HasMaxLength(300);
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ModelFolder","Dbo");
                 });
@@ -225,22 +200,21 @@ namespace ModelArchive.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("EntityState")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ImageName")
+                    b.Property<string>("FolderName")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
-                    b.Property<Guid>("LastModifiedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("ModelId")
                         .HasColumnType("uniqueidentifier");
@@ -252,7 +226,119 @@ namespace ModelArchive.Persistence.Migrations
                     b.ToTable("ModelImage","Dbo");
                 });
 
-            modelBuilder.Entity("ModelArchive.Persistence.Identity.AppUser", b =>
+            modelBuilder.Entity("ModelArchive.Core.Entities.Printer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(5000);
+
+                    b.Property<int>("EntityState")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Printer","Dbo");
+                });
+
+            modelBuilder.Entity("ModelArchive.Core.Entities.PrinterImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("EntityState")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FolderName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("PrinterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PrinterId");
+
+                    b.ToTable("PrinterImage","Dbo");
+                });
+
+            modelBuilder.Entity("ModelArchive.Persistence.Identity.AuthenticationRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles","Security");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("e76b37a7-8e06-4df2-8961-f78ab2ef2472"),
+                            ConcurrencyStamp = "01755524-7dc7-4ccf-97d4-48364c8f4a07",
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = new Guid("7aae4732-fb79-435a-97cf-3764de5a3dfa"),
+                            ConcurrencyStamp = "c055e366-466f-4b20-ba70-e6a75ed6fea8",
+                            Name = "user",
+                            NormalizedName = "USER"
+                        });
+                });
+
+            modelBuilder.Entity("ModelArchive.Persistence.Identity.AuthenticationUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -325,9 +411,34 @@ namespace ModelArchive.Persistence.Migrations
                     b.ToTable("AspNetUsers","Security");
                 });
 
+            modelBuilder.Entity("ModelArchive.Persistence.Identity.AuthenticationUserRole", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("RoleId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("RoleId1");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("AspNetUserRoles","Security");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                    b.HasOne("ModelArchive.Persistence.Identity.AuthenticationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -336,7 +447,7 @@ namespace ModelArchive.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("ModelArchive.Persistence.Identity.AppUser", null)
+                    b.HasOne("ModelArchive.Persistence.Identity.AuthenticationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -345,22 +456,7 @@ namespace ModelArchive.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("ModelArchive.Persistence.Identity.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ModelArchive.Persistence.Identity.AppUser", null)
+                    b.HasOne("ModelArchive.Persistence.Identity.AuthenticationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -369,7 +465,7 @@ namespace ModelArchive.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("ModelArchive.Persistence.Identity.AppUser", null)
+                    b.HasOne("ModelArchive.Persistence.Identity.AuthenticationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -385,6 +481,15 @@ namespace ModelArchive.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ModelArchive.Core.Entities.ModelFolder", b =>
+                {
+                    b.HasOne("ModelArchive.Core.Entities.ArchiveUser", "User")
+                        .WithMany("Folders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ModelArchive.Core.Entities.ModelImage", b =>
                 {
                     b.HasOne("ModelArchive.Core.Entities.Model3D", "Model")
@@ -392,6 +497,47 @@ namespace ModelArchive.Persistence.Migrations
                         .HasForeignKey("ModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ModelArchive.Core.Entities.Printer", b =>
+                {
+                    b.HasOne("ModelArchive.Core.Entities.ArchiveUser", "User")
+                        .WithMany("Printers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ModelArchive.Core.Entities.PrinterImage", b =>
+                {
+                    b.HasOne("ModelArchive.Core.Entities.Printer", "Printer")
+                        .WithMany("PrinterImages")
+                        .HasForeignKey("PrinterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ModelArchive.Persistence.Identity.AuthenticationUserRole", b =>
+                {
+                    b.HasOne("ModelArchive.Persistence.Identity.AuthenticationRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelArchive.Persistence.Identity.AuthenticationRole", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId1");
+
+                    b.HasOne("ModelArchive.Persistence.Identity.AuthenticationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelArchive.Persistence.Identity.AuthenticationUser", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId1");
                 });
 #pragma warning restore 612, 618
         }
