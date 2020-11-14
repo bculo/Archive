@@ -142,6 +142,7 @@ namespace ModelArchive.WebApi
             //DI
             services.AddTransient<IDateTime, DateTimeService>();
             services.AddTransient<IDatabaseTransaction, DatabaseTransaction>();
+            services.AddTransient(typeof(ITransaction<>), typeof(Transaction<>));
 
             services.AddScoped<IAuthService, HttpContextAuthService>();
             services.AddScoped<ICurrentUser, CurrentUserService>();
