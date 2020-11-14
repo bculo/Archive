@@ -27,6 +27,9 @@ namespace ModelArchive.Persistence
         public DbSet<ModelFolder> Folders { get; set; }
         public DbSet<Model3D> Models { get; set; }
         public DbSet<ModelImage> ModelImages { get; set; }
+        public DbSet<ArchiveUser> ArchiveUsers { get; set; }
+        public DbSet<Printer> Printers { get; set; }
+        public DbSet<PrinterImage> PrinterImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

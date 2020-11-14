@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using ModelArchive.Application.Config;
 using ModelArchive.Application.Contracts.Repositories;
+using ModelArchive.Core.Entities;
 using ModelArchive.Core.Queries;
 using ModelArchive.Persistence.Extensions;
 using ModelArchive.Persistence.Identity;
@@ -13,12 +14,15 @@ namespace ModelArchive.Persistence.Repositories
     {
         private readonly UserManager<AuthenticationUser> _userManager;
         private readonly RoleOptions _options;
+        private readonly ArchiveDbContext _dbContext;
 
         public UserRepository(UserManager<AuthenticationUser> userManager,
-            IOptions<RoleOptions> options)
+            IOptions<RoleOptions> options,
+            ArchiveDbContext dbContext)
         {
             _userManager = userManager;
             _options = options.Value;
+            _dbContext = dbContext;
         }
 
         public async Task<UserQuery> GetArchiveUser(string identifier)
@@ -50,6 +54,17 @@ namespace ModelArchive.Persistence.Repositories
             {
                 return identityResult.ToBadResult<UserQuery>();
             }
+
+            //add user to domain table
+            var newArchiveUser = new ArchiveUser
+            {
+                UserName = newUserInstance.UserName,
+                IdentityId = newUserInstance.Id,
+            };
+
+            _dbContext.ArchiveUsers.Add(newArchiveUser);
+
+            await _dbContext.SaveChangesAsync();
 
             return QueryResult.Success(newUserInstance.ToQueryResult());
         }

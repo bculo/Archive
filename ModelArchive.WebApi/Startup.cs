@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ModelArchive.Application;
+using ModelArchive.Application.Behaviours;
 using ModelArchive.Application.Config;
 using ModelArchive.Application.Contracts;
 using ModelArchive.Application.Contracts.Repositories;
@@ -140,7 +141,8 @@ namespace ModelArchive.WebApi
 
             //DI
             services.AddTransient<IDateTime, DateTimeService>();
-             
+            services.AddTransient<IDatabaseTransaction, DatabaseTransaction>();
+
             services.AddScoped<IAuthService, HttpContextAuthService>();
             services.AddScoped<ICurrentUser, CurrentUserService>();
 
@@ -149,16 +151,26 @@ namespace ModelArchive.WebApi
             //MediatR
             services.AddMediatR(typeof(AssemblyResource).Assembly);
 
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ExceptionBehavior<,>));
+
             //add fluent validation
             services.AddControllers(opt =>
             {
                 opt.Filters.Add<ArchiveExceptionFilter>(); //Exception filter registration
-            })
+            });
+
+            //fluent validation
+            services.AddValidatorsFromAssembly(typeof(AssemblyResource).Assembly);
+
+            /*
             .AddFluentValidation(opt => 
             { 
                 opt.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
-                opt.RegisterValidatorsFromAssembly(typeof(AssemblyResource).Assembly);
+                //opt.RegisterValidatorsFromAssembly(typeof(AssemblyResource).Assembly);
             });
+            */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

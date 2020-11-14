@@ -11,5 +11,6 @@ namespace ModelArchive.Application.Contracts.Repositories
         IExecutionStrategy CreateExecutionStrategy();
         Task StartTransactionAsync();
         Task CommitTransactionAsync();
+        Task StopTransactionAsync();
     }
 }

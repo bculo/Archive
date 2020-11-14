@@ -91,5 +91,18 @@ namespace ModelArchive.Persistence
 
             _disposed = true;
         }
+
+        /// <summary>
+        /// Dispose transaciton
+        /// </summary>
+        /// <returns></returns>
+        public async Task StopTransactionAsync()
+        {
+            if (CurrentTransaction is null)
+                return;
+
+            await CurrentTransaction.RollbackAsync();
+            CurrentTransaction.Dispose();
+        }
     }
 }
