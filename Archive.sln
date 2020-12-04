@@ -7,17 +7,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0DD6A67E-B79
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8E1A9AE3-73B3-4442-A43A-8C5D53FCF92C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelArchive.WebApi", "ModelArchive.WebApi\ModelArchive.WebApi.csproj", "{3FA85AB5-A06A-4623-A511-D555B1AF03BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelArchive.WebApi", "ModelArchive.WebApi\ModelArchive.WebApi.csproj", "{3FA85AB5-A06A-4623-A511-D555B1AF03BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelArchive.Persistence", "ModelArchive.Persistence\ModelArchive.Persistence.csproj", "{99B87E9B-5EBD-458D-9249-246DDDF6B264}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelArchive.Persistence", "ModelArchive.Persistence\ModelArchive.Persistence.csproj", "{99B87E9B-5EBD-458D-9249-246DDDF6B264}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelArchive.Application", "ModelArchive.Application\ModelArchive.Application.csproj", "{0259062E-DA3A-4D58-A4D0-2D48AC677558}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelArchive.Application", "ModelArchive.Application\ModelArchive.Application.csproj", "{0259062E-DA3A-4D58-A4D0-2D48AC677558}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelArchive.Core", "ModelArchive.Core\ModelArchive.Core.csproj", "{D9B80A3B-D940-434E-8FEB-AB8B32CDFA31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelArchive.Core", "ModelArchive.Core\ModelArchive.Core.csproj", "{D9B80A3B-D940-434E-8FEB-AB8B32CDFA31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelArchive.Infrastracture", "ModelArchive.Infrastracture\ModelArchive.Infrastracture.csproj", "{5EC5E875-8AB7-4ACB-BEE3-7BC3B7442F39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelArchive.Infrastracture", "ModelArchive.Infrastracture\ModelArchive.Infrastracture.csproj", "{5EC5E875-8AB7-4ACB-BEE3-7BC3B7442F39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelArchive.Common", "ModelArchive.Common\ModelArchive.Common.csproj", "{B427D3F7-E706-43A8-AEE1-2987EE422C80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelArchive.Common", "ModelArchive.Common\ModelArchive.Common.csproj", "{B427D3F7-E706-43A8-AEE1-2987EE422C80}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ModelArchive.Client", "ModelArchive.Client", "{E41DF827-3728-4E02-819B-A429280771E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +62,7 @@ Global
 		{D9B80A3B-D940-434E-8FEB-AB8B32CDFA31} = {0DD6A67E-B795-4731-88E1-A5FB8B8235FF}
 		{5EC5E875-8AB7-4ACB-BEE3-7BC3B7442F39} = {0DD6A67E-B795-4731-88E1-A5FB8B8235FF}
 		{B427D3F7-E706-43A8-AEE1-2987EE422C80} = {0DD6A67E-B795-4731-88E1-A5FB8B8235FF}
+		{E41DF827-3728-4E02-819B-A429280771E4} = {0DD6A67E-B795-4731-88E1-A5FB8B8235FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D315CE9F-2773-4B80-89E7-80A55015EDFD}
